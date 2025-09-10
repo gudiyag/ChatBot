@@ -1,0 +1,14 @@
+from chatterbot import ChatBot
+
+
+from chatterbot.logic import MathematicalEvaluation
+
+
+bot = ChatBot("Math_bot", logic_adapters=["chatterbot.logic.MathematicalEvaluation"])
+
+print("----------Math Chatbot----------")
+
+while True:
+    user_text = input("type the math equation that you want to solve: ")
+    
+    print("Chatbot: " +str(bot.get_response(user_text)))

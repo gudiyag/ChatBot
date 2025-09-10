@@ -1,0 +1,6 @@
+1. chatterbot
+2. chatterbot-corpus
+3. pyyaml python -m spacy download en
+4. spacy
+5. jupyter or vscode
+6. flask 
