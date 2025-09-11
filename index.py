@@ -1,5 +1,8 @@
 from chatterbot import ChatBot
-from chatterbot.trainers import ListTrainer 
+from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
 
 bot=ChatBot("chatbot",read_only=False, 
     logic_adapters=[
@@ -12,31 +15,49 @@ bot=ChatBot("chatbot",read_only=False,
 
         ])
 
+trainer=ListTrainer(bot)
+trainer.train([
+    "hi",
+    "hello",
+    "how's it going ",
+    "not bad",
+    "how can i lose weight",
+    "You've got to work out mate!",
+    "any suggestions",
+    "Yes, 1- work out 2- stop eating everythis 3- follow diet",
+    "other suggestions",
+    "please visit this link: https://www.youtube.com/watch?v=LhL5SNZfnQs"
+])
 
-list_to_train=[
-    "hii",
-    "hii there",
-    "what's your name",
-    "I am chatbot",
-    "how old are you ?",
-    "I am ageless",
-    "why are you so mad?",
-    "I am not mad, I am just a bot",
-    "Do you have iPhone?",
-    "I've everything you have",
-    "what is your favorite food?",
-    "i don't eat food",
-    "whats you job?",
-    "I am here to answer your questions",
-    "I don't know what you are saying",
-]
 
-list_trainer=ListTrainer(bot)
 
-list_trainer.train(list_to_train)
-while True:
-    user_response=input("User: ")
-    print("Chatbot: " + str(bot.get_response(user_response)))
+# list_trainer=ListTrainer(bot)
 
+# list_trainer.train(list_to_train)
+
+trainer = ChatterBotCorpusTrainer(bot)
+trainer.train("chatterbot.corpus.english")
+
+
+@app.route("/")
+def main():
+    return render_template("index.html")
+
+
+
+# while True:
+#     user_response=input("User: ")
+#     print("Chatbot: " + str(bot.get_response(user_response)))
+    
+
+
+@app.route("/get")
+def get_chatbot_response():
+    userText = request.args.get('userMessage')
+    return str(bot.get_response(userText))
+
+
+if __name__=="__main__":
+    app.run(debug=True)
 
 
